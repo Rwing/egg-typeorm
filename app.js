@@ -9,7 +9,7 @@ module.exports = app => {
     app.beforeStart(async function () {
       if (app.config.typeorm.clients) {
         app.typeorm = {};
-        for (const id in typeorm.clients) {
+        for (const id in app.config.typeorm.clients) {
           app.typeorm[id] = await createOneClient(app.config.typeorm.clients[id], app);
         }
       } else {
