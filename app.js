@@ -4,22 +4,24 @@ require("reflect-metadata");
 const assert = require('assert');
 const typeorm = require('typeorm');
 
+let count = 0;
+
 module.exports = app => {
   if (app.config.typeorm.app) {
     app.beforeStart(async function () {
       if (app.config.typeorm.clients) {
         app.typeorm = {};
         for (const id in app.config.typeorm.clients) {
-          app.typeorm[id] = await createOneClient(app.config.typeorm.clients[id], app);
+          app.typeorm[id] = await createOneClient(id, app.config.typeorm.clients[id], app);
         }
       } else {
-        app.typeorm = await createOneClient(app.config.typeorm.client, app);
+        app.typeorm = await createOneClient('default', app.config.typeorm.client, app);
       }
     });
   }
 };
 
-async function createOneClient(config, app) {
+async function createOneClient(connectionName, config, app) {
   assert(config.type && config.host && config.port && config.username && config.database,
     `[egg-typeorm] 'type: ${config.type}', 'host: ${config.host}', 'port: ${config.port}', 'user: ${config.username}', 'database: ${config.database}' are required on config`);
 
@@ -35,6 +37,7 @@ async function createOneClient(config, app) {
       password: config.password,
       database: config.database
     },
+    name: connectionName,
     entities: [
       config.entityPath
     ],
