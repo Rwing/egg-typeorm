@@ -10,6 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "reflect-metadata": "^0.1.10",
-    "typeorm": "0.0.11"
+    "typeorm": "git+https://github.com/Rwing/typeorm.git#patch-1"
   }
 }
